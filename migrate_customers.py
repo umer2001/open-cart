@@ -32,6 +32,7 @@ def migrate_customers_from_open_cart_to_shopify(test_item_count=0):
 
     customerIndex = 0
     failures = []
+    successes: dict = {}
     try:
         for customer in shopify_customers:
             print(f"customerIndex: {customerIndex}")
@@ -41,6 +42,11 @@ def migrate_customers_from_open_cart_to_shopify(test_item_count=0):
                 failures.append(customer.to_dict())
                 json.dump(failures, open(
                     "output/failures/opencart_customers_failures.json", "w"))
+            else:
+                if result["data"]["customerCreate"]["customer"]["id"]:
+                    successes[customer.email]= result["data"]["customerCreate"]["customer"]["id"]
+                    json.dump(successes, open(
+                        "output/successes/opencart_customers_successes.json", "w"))
             customerIndex += 1
     except Exception as e:
         print(e)
