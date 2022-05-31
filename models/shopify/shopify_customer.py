@@ -68,30 +68,56 @@ class ShopifyAddress:
         assert isinstance(obj, dict)
         if obj.get("address1") is not None:
             address1 = from_str(obj.get("address1"))
+        else:
+            address1 = None
         if obj.get("address2") is not None:
             address2 = from_str(obj.get("address2"))
+        else:
+            address2 = None
         if obj.get("city") is not None:
             city = from_str(obj.get("city"))
+        else:
+            city = None
         if obj.get("company") is not None:
             company = from_str(obj.get("company"))
+        else:
+            company = None
         if obj.get("country") is not None:
             country = from_str(obj.get("country"))
+        else:
+            country = None
         if obj.get("countryCode") is not None:
             country_code = from_str(obj.get("countryCode"))
+        else:
+            country_code = None
         if obj.get("firstName") is not None:
             first_name = from_str(obj.get("firstName"))
+        else:
+            first_name = None
         if obj.get("id") is not None:
             id = from_str(obj.get("id"))
+        else:
+            id = None
         if obj.get("lastName") is not None:
             last_name = from_str(obj.get("lastName"))
+        else:
+            last_name = None
         if obj.get("phone") is not None:
             phone = from_str(obj.get("phone"))
+        else:
+            phone = None
         if obj.get("province") is not None:
             province = from_str(obj.get("province"))
+        else:
+            province = None
         if obj.get("provinceCode") is not None:
             province_code = from_str(obj.get("provinceCode"))
+        else:
+            province_code = None
         if obj.get("zip") is not None:
             zip = from_str(obj.get("zip"))
+        else:
+            zip = None
         return ShopifyAddress(address1, address2, city, company, country, country_code, first_name, id, last_name, phone, province, province_code, zip)
 
     def to_dict(self) -> dict:
