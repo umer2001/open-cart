@@ -172,16 +172,28 @@ class Metafield:
         assert isinstance(obj, dict)
         if obj.get("description") is not None:
             description = from_str(obj.get("description"))
+        else:
+            description = None
         if obj.get("id") is not None:
             id = from_str(obj.get("id"))
+        else:
+            id = None
         if obj.get("key") is not None:
             key = from_str(obj.get("key"))
+        else:
+            key = None
         if obj.get("namespace") is not None:
             namespace = from_str(obj.get("namespace"))
+        else:
+            namespace = None
         if obj.get("type") is not None:
             type = from_str(obj.get("type"))
+        else:
+            type = None
         if obj.get("value") is not None:
             value = from_str(obj.get("value"))
+        else:
+            value = None
         return Metafield(description, id, key, namespace, type, value)
 
     def to_dict(self) -> dict:
