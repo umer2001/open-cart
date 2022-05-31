@@ -315,42 +315,76 @@ class ShopifyCustomer:
         assert isinstance(obj, dict)
         if obj.get("acceptsMarketing") is not None:
             accepts_marketing = from_bool(obj.get("acceptsMarketing"))
+        else:
+            accepts_marketing = None
         if obj.get("acceptsMarketingUpdatedAt") is not None:
             accepts_marketing_updated_at = from_str(
                 obj.get("acceptsMarketingUpdatedAt"))
+        else:
+            accepts_marketing_updated_at = None
         if obj.get("addresses") is not None:
             addresses = from_list(
                 ShopifyAddress.from_dict, obj.get("addresses"))
+        else:
+            addresses = None
         if obj.get("email") is not None:
             email = from_str(obj.get("email"))
+        else:
+            email = None
         if obj.get("firstName") is not None:
             first_name = from_str(obj.get("firstName"))
+        else:
+            first_name = None
         if obj.get("id") is not None:
             id = from_str(obj.get("id"))
+        else:
+            id = None
         if obj.get("lastName") is not None:
             last_name = from_str(obj.get("lastName"))
+        else:
+            last_name = None
         if obj.get("locale") is not None:
             locale = from_str(obj.get("locale"))
+        else:
+            locale = None
         if obj.get("marketingOptInLevel") is not None:
             marketing_opt_in_level = from_str(obj.get("marketingOptInLevel"))
+        else:
+            marketing_opt_in_level = None
         if obj.get("metafields") is not None:
             metafields = from_list(Metafield.from_dict, obj.get("metafields"))
+        else:
+            metafields = []
         if obj.get("note") is not None:
             note = from_str(obj.get("note"))
+        else:
+            note = None
         if obj.get("phone") is not None:
             phone = from_str(obj.get("phone"))
+        else:
+            phone = None
         if obj.get("privateMetafields") is not None:
             private_metafields = from_list(
                 PrivateMetafield.from_dict, obj.get("privateMetafields"))
+        else:
+            private_metafields = []
         if obj.get("smsMarketingConsent") is not None:
             sms_marketing_consent = SMSMarketingConsent.from_dict(
                 obj.get("smsMarketingConsent"))
+        else:
+            sms_marketing_consent = None
         if obj.get("tags") is not None:
             tags = from_list(from_str, obj.get("tags"))
+        else:
+            tags = []
         if obj.get("taxExempt") is not None:
             tax_exempt = from_bool(obj.get("taxExempt"))
+        else:
+            tax_exempt = None
         if obj.get("taxExemptions") is not None:
             tax_exemptions = from_list(from_str, obj.get("taxExemptions"))
+        else:
+            tax_exemptions = []
         return ShopifyCustomer(accepts_marketing, accepts_marketing_updated_at, addresses, email, first_name, id, last_name, locale, marketing_opt_in_level, metafields, note, phone, private_metafields, sms_marketing_consent, tags, tax_exempt, tax_exemptions)
 
     def to_dict(self) -> dict:
