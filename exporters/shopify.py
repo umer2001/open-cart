@@ -79,7 +79,6 @@ class ShopifyExporter(BaseExporter):
             },
             files={"file": open(file_path, 'rb')}
         ).text
-        print("upload_result", upload_result)
 
     def bulk_mutation_status(self, bulk_operation_id):
         client = shopify.GraphQL()
@@ -183,10 +182,12 @@ class ShopifyExporter(BaseExporter):
         print("upload_info", mutation_result)
 
     def bulk_export_collections(self, file_name, file_path):
+        print("making bulk upload URL")
         upload_info = self.create_bulk_upload_url(file_name=file_name)
         # POST request to staged upload with parameters as form inputs in the request body.
+        print("uploading file")
         self.upload_file(upload_info=upload_info, file_path=file_path)
-
+        print("making bulk export")
         # Add products through GraphQl
         client = shopify.GraphQL()
         client.endpoint = self.endpoint
