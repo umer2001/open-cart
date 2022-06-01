@@ -26,12 +26,19 @@ class OpencartImporter(DefaultImporter):
                             }
                             ).json().get('data')
 
-    def fetch_products(self):
-        return requests.get(f"{self.url}/index.php?route=rest/product_admin/products",
+    def fetch_products(self, total_products, limit_per_page=20):
+        page = 1
+        go_till = total_products/limit_per_page+1
+        products = []
+        while page <= go_till:
+            print(f"Fetching products page {page}")
+            products.extend(requests.get(f"{self.url}/index.php?route=rest/product_admin/products&limit={limit_per_page}&page={page}",
                             headers={
                                 'X-Oc-Restadmin-Id': self.api_key
                             }
-                            ).json().get('data')
+            ).json().get('data'))
+            page += 1
+        return products
 
     def fetch_orders(self):
         return requests.get(f"{self.url}/index.php?route=rest/order_admin/orders",
@@ -59,5 +66,4 @@ class OpencartImporter(DefaultImporter):
                                           }
                                           ).json().get('data'))
             page += 1
-
         return customers
