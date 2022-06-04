@@ -157,20 +157,33 @@ class MvmVariant:
 
     def to_dict(self) -> dict:
         result: dict = {}
-        result["sku"] = from_str(self.sku)
-        result["barcode"] = from_str(str(self.barcode))
-        result["weight"] = from_str(str(self.weight))
-        result["dimension"] = from_str(self.dimension)
-        result["price"] = from_str(self.price)
-        result["compare_at_price"] = from_str(self.compare_at_price)
-        result["handling_charges"] = from_str(self.handling_charges)
-        result["charge_taxes"] = from_int(self.charge_taxes)
-        result["require_shipping"] = from_str(str(self.require_shipping))
-        result["track_inventory"] = from_str(str(self.track_inventory))
-        result["quantity"] = from_str(str(self.quantity))
-        result["inventory_policy"] = from_str(str(self.inventory_policy))
-        result["inventory_locations"] = from_list(
-            lambda x: to_class(MvmInventoryLocation, x), self.inventory_locations)
+        if self.sku is not None:
+            result["sku"] = from_str(self.sku)
+        if self.barcode is not None:
+            result["barcode"] = from_str(str(self.barcode))
+        if self.weight is not None:
+            result["weight"] = from_str(str(self.weight))
+        if self.dimension is not None:
+            result["dimension"] = from_str(self.dimension)
+        if self.price is not None:
+            result["price"] = from_str(self.price)
+        if self.compare_at_price is not None:
+            result["compare_at_price"] = from_str(self.compare_at_price)
+        if self.handling_charges is not None:
+            result["handling_charges"] = from_str(self.handling_charges)
+        if self.charge_taxes is not None:
+            result["charge_taxes"] = from_int(self.charge_taxes)
+        if self.require_shipping is not None:
+            result["require_shipping"] = from_str(str(self.require_shipping))
+        if self.track_inventory is not None:
+            result["track_inventory"] = from_str(str(self.track_inventory))
+        if self.quantity is not None:
+            result["quantity"] = from_str(str(self.quantity))
+        if self.inventory_policy is not None:
+            result["inventory_policy"] = from_str(str(self.inventory_policy))
+        if self.inventory_locations is not None:
+            result["inventory_locations"] = from_list(
+                lambda x: to_class(MvmInventoryLocation, x), self.inventory_locations)
         return result
 
 
@@ -213,47 +226,111 @@ class ShopifyMultiVendorProduct:
     @staticmethod
     def from_dict(obj: Any) -> 'ShopifyMultiVendorProduct':
         assert isinstance(obj, dict)
-        seller_id = int(from_str(obj.get("seller_id")))
-        type = int(from_str(obj.get("type")))
-        product_name = from_str(obj.get("product_name"))
-        product_type = from_str(obj.get("product_type"))
-        product_tag = from_str(obj.get("product_tag"))
-        product_description = from_str(obj.get("product_description"))
-        handle = from_str(obj.get("handle"))
-        product_meta_info = from_str(obj.get("product_meta_info"))
-        product_policy = from_str(obj.get("product_policy"))
-        product_url = from_str(obj.get("product_url"))
-        expiry_date = from_str(obj.get("expiry_date"))
-        shipping_id = int(from_str(obj.get("shipping_id")))
-        variants = from_list(MvmVariant.from_dict, obj.get("variants"))
-        options = from_list(MvmOption.from_dict, obj.get("options"))
-        images = from_list(MvmImage.from_dict, obj.get("images"))
-        collections = from_list(lambda x: int(
-            from_str(x)), obj.get("collections"))
+        if obj.get("seller_id") is not None:
+            seller_id = int(from_str(obj.get("seller_id")))
+        else:
+            seller_id = None
+        if obj.get("type") is not None:
+            type = int(from_str(obj.get("type")))
+        else:
+            type = None
+        if obj.get("product_name") is not None:
+            product_name = from_str(obj.get("product_name"))
+        else:
+            product_name = None
+        if obj.get("product_type") is not None:
+            product_type = from_str(obj.get("product_type"))
+        else:
+            product_type = None
+        if obj.get("product_tag") is not None:
+            product_tag = from_str(obj.get("product_tag"))
+        else:
+            product_tag = None
+        if obj.get("product_description") is not None:
+            product_description = from_str(obj.get("product_description"))
+        else:
+            product_description = None
+        if obj.get("handle") is not None:
+            handle = from_str(obj.get("handle"))
+        else:
+            handle = None
+        if obj.get("product_meta_info") is not None:
+            product_meta_info = from_str(obj.get("product_meta_info"))
+        else:
+            product_meta_info = None
+        if obj.get("product_policy") is not None:
+            product_policy = from_str(obj.get("product_policy"))
+        else:
+            product_policy = None
+        if obj.get("product_url") is not None:
+            product_url = from_str(obj.get("product_url"))
+        else:
+            product_url = None
+        if obj.get("expiry_date") is not None:
+            expiry_date = from_str(obj.get("expiry_date"))
+        else:
+            expiry_date = None
+        if obj.get("shipping_id") is not None:
+            shipping_id = int(from_str(obj.get("shipping_id")))
+        else:
+            shipping_id = None
+        if obj.get("variants") is not None:
+            variants = from_list(MvmVariant.from_dict, obj.get("variants"))
+        else:
+            variants = []
+        if obj.get("options") is not None:
+            options = from_list(MvmOption.from_dict, obj.get("options"))
+        else:
+            options = []
+        if obj.get("images") is not None:
+            images = from_list(MvmImage.from_dict, obj.get("images"))
+        else:
+            images = []
+        if obj.get("collections") is not None:
+            collections = from_list(lambda x: int(
+                from_str(x)), obj.get("collections"))
+        else:
+            collections = []
         return ShopifyMultiVendorProduct(seller_id, type, product_name, product_type, product_tag, product_description, handle, product_meta_info, product_policy, product_url, expiry_date, shipping_id, variants, options, images, collections)
 
     def to_dict(self) -> dict:
         result: dict = {}
-        result["seller_id"] = from_str(str(self.seller_id))
-        result["type"] = from_str(str(self.type))
-        result["product_name"] = from_str(self.product_name)
-        result["product_type"] = from_str(self.product_type)
-        result["product_tag"] = from_str(self.product_tag)
-        result["product_description"] = from_str(self.product_description)
-        result["handle"] = from_str(self.handle)
-        result["product_meta_info"] = from_str(self.product_meta_info)
-        result["product_policy"] = from_str(self.product_policy)
-        result["product_url"] = from_str(self.product_url)
-        result["expiry_date"] = from_str(self.expiry_date)
-        result["shipping_id"] = from_str(str(self.shipping_id))
-        result["variants"] = from_list(
-            lambda x: to_class(MvmVariant, x), self.variants)
-        result["options"] = from_list(
-            lambda x: to_class(MvmOption, x), self.options)
-        result["images"] = from_list(
-            lambda x: to_class(MvmImage, x), self.images)
-        result["collections"] = from_list(lambda x: from_str(
-            (lambda x: str(x))(x)), self.collections)
+        if self.seller_id is not None:
+            result["seller_id"] = from_str(str(self.seller_id))
+        if self.type is not None:
+            result["type"] = from_str(str(self.type))
+        if self.product_name is not None:
+            result["product_name"] = from_str(self.product_name)
+        if self.product_type is not None:
+            result["product_type"] = from_str(self.product_type)
+        if self.product_tag is not None:
+            result["product_tag"] = from_str(self.product_tag)
+        if self.product_description is not None:
+            result["product_description"] = from_str(self.product_description)
+        if self.handle is not None:
+            result["handle"] = from_str(self.handle)
+        if self.product_meta_info is not None:
+            result["product_meta_info"] = from_str(self.product_meta_info)
+        if self.product_policy is not None:
+            result["product_policy"] = from_str(self.product_policy)
+        if self.product_url is not None:
+            result["product_url"] = from_str(self.product_url)
+        if self.expiry_date is not None:
+            result["expiry_date"] = from_str(self.expiry_date)
+        if self.shipping_id is not None:
+            result["shipping_id"] = from_str(str(self.shipping_id))
+        if self.variants is not None:
+            result["variants"] = from_list(
+                lambda x: to_class(MvmVariant, x), self.variants)
+        if self.options is not None:
+            result["options"] = from_list(
+                lambda x: to_class(MvmOption, x), self.options)
+        if self.images is not None:
+            result["images"] = from_list(
+                lambda x: to_class(MvmImage, x), self.images)
+        if self.collections is not None:
+            result["collections"] = from_list(lambda x: from_str(
+                (lambda x: str(x))(x)), self.collections)
         return result
 
 
