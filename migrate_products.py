@@ -13,11 +13,11 @@ def migrate_products_from_open_cart_to_mvm(test_item_count=0):
 
     # write products to  json file
     json.dump(products, open(
-        "source/opencart/opencart_products.json", "w"))
+        "source/opencart/products/opencart_products.json", "w"))
 
     # read products from json file
     products = json.load(open(
-        "source/opencart/opencart_products.json", "r"))
+        "source/opencart/products/opencart_products.json", "r"))
 
     open_cart_products = [
         OpenCartProduct_from_dict(
@@ -43,12 +43,12 @@ def migrate_products_from_open_cart_to_mvm(test_item_count=0):
                 print(result)
                 failures.append(shopify_mvm_products[productIndex].to_dict())
                 json.dump(failures, open(
-                    "output/failures/opencart_products_failures.json", "w"))
+                    "output/failures/products/opencart_products_failures.json", "w"))
             else:
                 if result["product"]["id"]:
                     successes[shopify_mvm_products[productIndex].product_name] = result["product"]
                     json.dump(successes, open(
-                        "output/successes/opencart_products_successes.json", "w"))
+                        "output/successes/products/opencart_products_successes.json", "w"))
             productIndex += 1
     except Exception as e:
         print(e)
@@ -78,13 +78,13 @@ def retry_failed_customers(path_to_failurs_file: str, test_item_count=0):
                 print(result)
                 failures.append(shopify_mvm_products[productIndex].to_dict())
                 json.dump(failures, open(
-                    "output/failures/opencart_products_failures.json", "w"))
+                    "output/failures/products/opencart_products_failures.json", "w"))
             else:
                 if result["product"]["id"]:
                     successes[shopify_mvm_products[productIndex]
                               .product_name] = result["product"]
                     json.dump(successes, open(
-                        "output/successes/opencart_products_successes.json", "w"))
+                        "output/successes/products/opencart_products_successes.json", "w"))
             productIndex += 1
     except Exception as e:
         print(e)
@@ -106,7 +106,7 @@ def main():
         print("Retry Failures")
         print("Enter s.no of the file to retry: ")
         # list all files in /output/failures
-        path_to_failures_file = "output/failures/"
+        path_to_failures_file = "output/failures/products/"
         onlyfiles = [f for f in listdir(path_to_failures_file) if isfile(
             join(path_to_failures_file, f))]
 

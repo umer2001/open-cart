@@ -14,11 +14,11 @@ def migrate_customers_from_open_cart_to_shopify(test_item_count=0):
 
     # write customers to  json file
     json.dump(customers, open(
-        "source/opencart/opencart_customers.json", "w"))
+        "source/opencart/customers/opencart_customers.json", "w"))
 
     # read customers from json file
     customers = json.load(open(
-        "source/opencart/opencart_customers.json", "r"))
+        "source/opencart/customers/opencart_customers.json", "r"))
 
     open_cart_customers = [open_cart_customer_from_dict(
         customer) for customer in customers]
@@ -44,13 +44,13 @@ def migrate_customers_from_open_cart_to_shopify(test_item_count=0):
                 print(result)
                 failures.append(shopify_customers[customerIndex].to_dict())
                 json.dump(failures, open(
-                    "output/failures/opencart_customers_failures.json", "w"))
+                    "output/failures/customers/opencart_customers_failures.json", "w"))
             else:
                 if result["data"]["customerCreate"]["customer"]["id"]:
                     successes[shopify_customers[customerIndex]
                               .email] = result["data"]["customerCreate"]["customer"]["id"]
                     json.dump(successes, open(
-                        "output/successes/opencart_customers_successes.json", "w"))
+                        "output/successes/customers/opencart_customers_successes.json", "w"))
             customerIndex += 1
     except Exception as e:
         print(e)
@@ -71,7 +71,7 @@ def retry_failed_customers(path_to_failurs_file: str, test_item_count=0):
 
     items_to_migrate_count = test_item_count if test_item_count > 0 else len(
         shopify_customers)
-    
+
     try:
         for customerIndex in range(0, items_to_migrate_count):
             print(f"customerIndex: {customerIndex}")
@@ -81,13 +81,13 @@ def retry_failed_customers(path_to_failurs_file: str, test_item_count=0):
                 print(result)
                 failures.append(shopify_customers[customerIndex].to_dict())
                 json.dump(failures, open(
-                    "output/failures/opencart_customers_failures.json", "w"))
+                    "output/failures/customers/opencart_customers_failures.json", "w"))
             else:
                 if result["data"]["customerCreate"]["customer"]["id"]:
                     successes[shopify_customers[customerIndex]
                               .email] = result["data"]["customerCreate"]["customer"]["id"]
                     json.dump(successes, open(
-                        "output/successes/opencart_customers_successes.json", "w"))
+                        "output/successes/customers/opencart_customers_successes.json", "w"))
             customerIndex += 1
     except Exception as e:
         print(e)
@@ -109,7 +109,7 @@ def main():
         print("Retry Failures")
         print("Enter s.no of the file to retry: ")
         # list all files in /output/failures
-        path_to_failures_file = "output/failures/"
+        path_to_failures_file = "output/failures/customers/"
         onlyfiles = [f for f in listdir(path_to_failures_file) if isfile(
             join(path_to_failures_file, f))]
 
