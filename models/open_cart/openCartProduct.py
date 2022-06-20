@@ -808,7 +808,7 @@ class OpenCartProduct:
                     position="0",
                     image_attachment=""
                 ),
-                # *[MvmImage(image_url=image, image_alt=f"{self.product_description[0].name} image", position="1", image_attachment="") for image in self.original_images]
+                *[MvmImage(image_url=image.replace(" ", "+"), image_alt=f"{self.product_description[0].name} image", position="1", image_attachment="") for image in self.original_images]
             ],
             variants=[
                 MvmVariant(

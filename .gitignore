@@ -5,6 +5,7 @@ __pycache__/
 
 # extensions
 *.env
+*notes
 *.so
 *.json
 *.jsonl
