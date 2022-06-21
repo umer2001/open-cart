@@ -1,6 +1,8 @@
 import json
 from os.path import isfile, join
 from os import listdir
+from shopify import Metafield, Product
+from exporters.shopify import ShopifyExporter
 from exporters.shopify_multi_vendor import ShopifyMultiVendorExporter
 from importer.opencart import OpencartImporter
 from models.open_cart.openCartProduct import OpenCartProduct_from_dict
@@ -72,8 +74,8 @@ def retry_failed_customers(path_to_failurs_file: str, test_item_count=0):
     try:
         for productIndex in range(0, items_to_migrate_count):
             print(f"productIndex: {productIndex}")
-            result = json.loads(exporter.create_product(
-                shopify_mvm_products[productIndex]))
+            result = exporter.create_product(
+                shopify_mvm_products[productIndex])
             if result.get("code", None):
                 print(result)
                 failures.append(shopify_mvm_products[productIndex].to_dict())
@@ -90,10 +92,61 @@ def retry_failed_customers(path_to_failurs_file: str, test_item_count=0):
         print(e)
 
 
+def add_download_link_meta_field(shopify_product_id, link):
+    # product = Product.find(shopify_product_id)
+    metafield = Metafield(
+        {
+            'type': 'url',
+            'namespace': 'my_fields',
+            'key': 'download_link',
+            'value': link
+        },
+        prefix_options={
+            'resource': 'products',
+            'resource_id': shopify_product_id
+        }
+    )
+    return metafield.save()
+
+
+def update_products(test_item_count=0):
+    exporter = ShopifyExporter()
+    exporter.authentication()
+
+    # read shopify product IDs & filenames from json file
+    products_ids = json.load(open(
+        "source/opencart/products/opencart_products.json", "r"))
+
+    # loop over products
+    items_to_update_count = test_item_count if test_item_count > 0 else len(
+        products_ids)
+
+    failures = []
+    successes = []
+    try:
+        for productIndex in range(0, items_to_update_count):
+            print(f"productIndex: {productIndex}")
+            result = add_download_link_meta_field("prodict id", "link")
+            if result is (not True):
+                print(result)
+                failures.append(products_ids[productIndex])
+                json.dump(failures, open(
+                    "output/failures/products/opencart_products_update_failures.json", "w"))
+            else:
+                if result:
+                    successes.append(products_ids[productIndex])
+                    json.dump(successes, open(
+                        "output/successes/products/opencart_products_update_successes.json", "w"))
+            productIndex += 1
+    except Exception as e:
+        print(e)
+
+
 def main():
     print("Welcome to Product Migration Menu")
     print("1. Migrate Products from OpenCart to Shopify Multi Vendor Market place")
     print("2. Retry Failures")
+    print("3. Update products download links")
 
     choice = int(input("Enter your choice: "))
 
@@ -118,6 +171,10 @@ def main():
             input("Enter the number of items to migrate (0 for all): "))
         retry_failed_customers(
             f"{path_to_failures_file}{onlyfiles[choice - 1]}", test_item_count)
+    elif choice == 3:
+        print("Update products download links")
+        print(add_download_link_meta_field(
+            "6827641176157", "https://www.google.com"))
 
 
 # Call Main
