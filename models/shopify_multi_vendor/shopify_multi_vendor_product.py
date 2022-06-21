@@ -141,31 +141,57 @@ class MvmVariant:
         assert isinstance(obj, dict)
         if obj.get("sku") is not None:
             sku = from_str(obj.get("sku"))
+        else:
+            sku = None
         if obj.get("barcode") is not None:
             barcode = int(from_str(obj.get("barcode")))
+        else:
+            barcode = None
         if obj.get("weight") is not None:
-            weight = int(from_str(obj.get("weight")))
+            weight = float(from_str(obj.get("weight")))
+        else:
+            weight = None
         if obj.get("dimension") is not None:
             dimension = from_str(obj.get("dimension"))
+        else:
+            dimension = None
         if obj.get("price") is not None:
             price = from_str(obj.get("price"))
+        else:
+            price = None
         if obj.get("compare_at_price") is not None:
             compare_at_price = from_str(obj.get("compare_at_price"))
+        else:
+            compare_at_price = None
         if obj.get("handling_charges") is not None:
             handling_charges = from_str(obj.get("handling_charges"))
+        else:
+            handling_charges = None
         if obj.get("charge_taxes") is not None:
             charge_taxes = from_int(obj.get("charge_taxes"))
+        else:
+            charge_taxes = None
         if obj.get("require_shipping") is not None:
             require_shipping = int(from_str(obj.get("require_shipping")))
+        else:
+            require_shipping = None
         if obj.get("track_inventory") is not None:
             track_inventory = int(from_str(obj.get("track_inventory")))
+        else:
+            track_inventory = None
         if obj.get("quantity") is not None:
             quantity = int(from_str(obj.get("quantity")))
+        else:
+            quantity = None
         if obj.get("inventory_policy") is not None:
             inventory_policy = int(from_str(obj.get("inventory_policy")))
+        else:
+            inventory_policy = None
         if obj.get("inventory_locations") is not None:
             inventory_locations = from_list(
                 MvmInventoryLocation.from_dict, obj.get("inventory_locations"))
+        else:
+            inventory_locations = []
         return MvmVariant(sku, barcode, weight, dimension, price, compare_at_price, handling_charges, charge_taxes, require_shipping, track_inventory, quantity, inventory_policy, inventory_locations)
 
     def to_dict(self) -> dict:
