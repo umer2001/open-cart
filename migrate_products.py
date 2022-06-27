@@ -56,7 +56,7 @@ def migrate_products_from_open_cart_to_mvm(test_item_count=0):
         print(e)
 
 
-def retry_failed_customers(path_to_failurs_file: str, test_item_count=0):
+def retry_failed_products(path_to_failurs_file: str, test_item_count=0):
     failures = json.load(open(path_to_failurs_file, "r"))
     shopify_mvm_products = [
         mvm_product_from_dict(failure) for failure in failures
@@ -169,7 +169,7 @@ def main():
         choice = int(input("Enter your choice: "))
         test_item_count = int(
             input("Enter the number of items to migrate (0 for all): "))
-        retry_failed_customers(
+        retry_failed_products(
             f"{path_to_failures_file}{onlyfiles[choice - 1]}", test_item_count)
     elif choice == 3:
         print("Update products download links")
