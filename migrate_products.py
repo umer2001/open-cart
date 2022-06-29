@@ -5,6 +5,7 @@ from shopify import Metafield, Product
 from exporters.shopify import ShopifyExporter
 from exporters.shopify_multi_vendor import ShopifyMultiVendorExporter
 from importer.opencart import OpencartImporter
+from importer.shopify_multi_vendor import ShopifyMultiVendorImporter
 from models.open_cart.openCartProduct import OpenCartProduct_from_dict
 from models.shopify_multi_vendor.shopify_multi_vendor_product import mvm_product_from_dict
 
@@ -92,6 +93,14 @@ def retry_failed_products(path_to_failurs_file: str, test_item_count=0):
         print(e)
 
 
+def fetch_all_products_from_shopify_multi_vendor(product_count=0):
+    importer = ShopifyMultiVendorImporter()
+    products = importer.fetch_products(total_products=product_count)
+    # write to json file
+    json.dump(products, open(
+        "source/shopify_multi_vendor/products/shopify_multi_vendor_products.json", "w"))
+
+
 def add_download_link_meta_field(shopify_product_id, link):
     # product = Product.find(shopify_product_id)
     metafield = Metafield(
@@ -146,7 +155,8 @@ def main():
     print("Welcome to Product Migration Menu")
     print("1. Migrate Products from OpenCart to Shopify Multi Vendor Market place")
     print("2. Retry Failures")
-    print("3. Update products download links")
+    print("3. Fetch all products from Shopify Multi Vendor Market place")
+    print("4. Update products download links")
 
     choice = int(input("Enter your choice: "))
 
@@ -172,6 +182,11 @@ def main():
         retry_failed_products(
             f"{path_to_failures_file}{onlyfiles[choice - 1]}", test_item_count)
     elif choice == 3:
+        test_item_count = int(
+            input("Enter the number of items to fetch (more then 250) : "))
+        fetch_all_products_from_shopify_multi_vendor(
+            product_count=test_item_count)
+    elif choice == 4:
         print("Update products download links")
         print(add_download_link_meta_field(
             "6827641176157", "https://www.google.com"))
