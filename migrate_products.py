@@ -167,13 +167,15 @@ def update_products(test_item_count=0):
         for productIndex in range(0, items_to_update_count):
             print(f"productIndex: {productIndex}")
             print(products_ids[productIndex]["shopify_product_id"])
-            product_meta_feilds = products_attributes[products_ids[productIndex]["product_name"].strip(
-            )]
+            # get product name, id and attributes
+            product_name = products_ids[productIndex]["product_name"].strip()
             priduct_id = products_ids[productIndex]["shopify_product_id"]
-            if add_meta_fields(priduct_id, product_meta_feilds) and add_download_link(priduct_id, product_meta_feilds):
-                successes.append(products_ids[productIndex])
-                json.dump(successes, open(
-                    "output/successes/products/shopify_product_meta_fields_update_successes.json", "w"))
+            if product_name in products_attributes:
+                product_meta_feilds = products_attributes[product_name]
+                if add_meta_fields(priduct_id, product_meta_feilds) and add_download_link(priduct_id, product_meta_feilds):
+                    successes.append(products_ids[productIndex])
+                    json.dump(successes, open(
+                        "output/successes/products/shopify_product_meta_fields_update_successes.json", "w"))
             else:
                 failures.append(products_ids[productIndex])
                 json.dump(failures, open(
