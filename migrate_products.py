@@ -1,4 +1,5 @@
 import json
+import time
 from os.path import isfile, join
 from os import listdir
 from shopify import Metafield, Product
@@ -181,6 +182,8 @@ def update_products(test_item_count=0):
                 json.dump(failures, open(
                     "output/failures/products/shopify_product_meta_fields_update_failures.json", "w"))
             productIndex += 1
+            # sleep for 30 seconds because of shopify api rate limit
+            time.sleep(0.5)
     except Exception as e:
         print(e)
         print(type(e))    # the exception instance
