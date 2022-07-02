@@ -170,12 +170,10 @@ def update_products(test_item_count=0):
             product_meta_feilds = products_attributes[products_ids[productIndex]["product_name"].strip(
             )]
             priduct_id = products_ids[productIndex]["shopify_product_id"]
-            if add_meta_fields(
-                    priduct_id, product_meta_feilds):
-                if add_download_link(priduct_id, product_meta_feilds):
-                    successes.append(products_ids[productIndex])
-                    json.dump(successes, open(
-                        "output/successes/products/shopify_product_meta_fields_update_successes.json", "w"))
+            if add_meta_fields(priduct_id, product_meta_feilds) and add_download_link(priduct_id, product_meta_feilds):
+                successes.append(products_ids[productIndex])
+                json.dump(successes, open(
+                    "output/successes/products/shopify_product_meta_fields_update_successes.json", "w"))
             else:
                 failures.append(products_ids[productIndex])
                 json.dump(failures, open(
