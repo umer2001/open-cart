@@ -101,20 +101,47 @@ def fetch_all_products_from_shopify_multi_vendor(product_count=0):
         "source/shopify_multi_vendor/products/shopify_multi_vendor_products.json", "w"))
 
 
-def add_download_link_meta_field(shopify_product_id, link):
-    # product = Product.find(shopify_product_id)
+def add_download_link(shopify_product_id, meta_fields):
+    print(f"shopify_product_id: {shopify_product_id}")
+    # check if feild exists
+    if "filename" in meta_fields:
+        metafield = Metafield(
+            {
+                'type': "url",
+                'namespace': "my_fields",
+                'key': "download_link",
+                'value': f"https://felcon-store.s3.ap-southeast-1.amazonaws.com/pre-migration-files/{meta_fields['filename']}"
+            },
+            prefix_options={
+                'resource': 'products',
+                'resource_id': shopify_product_id
+            }
+        )
+        print(metafield.to_json())
+        return metafield.save()
+
+
+def add_meta_fields(shopify_product_id, meta_fields):
+    print(f"shopify_product_id: {shopify_product_id}")
+    attributes = {}
+    for key in meta_fields:
+        if key != "filename" and key != "mask":
+            attributes[key.lower()] = meta_fields[key]
+    namespace = "front_end"
+    value_type = "json"
     metafield = Metafield(
         {
-            'type': 'url',
-            'namespace': 'my_fields',
-            'key': 'download_link',
-            'value': link
+            'type': value_type,
+            'namespace': namespace,
+            'key': "attributes",
+            'value': json.dumps(attributes, indent=4)
         },
         prefix_options={
             'resource': 'products',
             'resource_id': shopify_product_id
         }
     )
+    print(metafield.to_json())
     return metafield.save()
 
 
@@ -122,9 +149,13 @@ def update_products(test_item_count=0):
     exporter = ShopifyExporter()
     exporter.authentication()
 
-    # read shopify product IDs & filenames from json file
+    # read shopify product IDs
     products_ids = json.load(open(
-        "source/opencart/products/opencart_products.json", "r"))
+        "source/shopify_multi_vendor/products/shopify_multi_vendor_products.json", "r"))
+
+    # read products attributes from json file
+    products_attributes = json.load(open(
+        "source/opencart/products/products_dicts.json", "r"))
 
     # loop over products
     items_to_update_count = test_item_count if test_item_count > 0 else len(
@@ -135,20 +166,25 @@ def update_products(test_item_count=0):
     try:
         for productIndex in range(0, items_to_update_count):
             print(f"productIndex: {productIndex}")
-            result = add_download_link_meta_field("prodict id", "link")
-            if result is (not True):
-                print(result)
-                failures.append(products_ids[productIndex])
-                json.dump(failures, open(
-                    "output/failures/products/opencart_products_update_failures.json", "w"))
-            else:
-                if result:
+            print(products_ids[productIndex]["shopify_product_id"])
+            product_meta_feilds = products_attributes[products_ids[productIndex]["product_name"].strip(
+            )]
+            priduct_id = products_ids[productIndex]["shopify_product_id"]
+            if add_meta_fields(
+                    priduct_id, product_meta_feilds):
+                if add_download_link(priduct_id, product_meta_feilds):
                     successes.append(products_ids[productIndex])
                     json.dump(successes, open(
-                        "output/successes/products/opencart_products_update_successes.json", "w"))
+                        "output/successes/products/shopify_product_meta_fields_update_successes.json", "w"))
+            else:
+                failures.append(products_ids[productIndex])
+                json.dump(failures, open(
+                    "output/failures/products/shopify_product_meta_fields_update_failures.json", "w"))
             productIndex += 1
     except Exception as e:
         print(e)
+        print(type(e))    # the exception instance
+        print(e.args)
 
 
 def main():
@@ -187,9 +223,10 @@ def main():
         fetch_all_products_from_shopify_multi_vendor(
             product_count=test_item_count)
     elif choice == 4:
-        print("Update products download links")
-        print(add_download_link_meta_field(
-            "6827641176157", "https://www.google.com"))
+        print("Update products meta fields")
+        test_item_count = int(
+            input("Enter the number of items to migrate (0 for all): "))
+        update_products(test_item_count)
 
 
 # Call Main
