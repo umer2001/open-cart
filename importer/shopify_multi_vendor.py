@@ -10,7 +10,7 @@ class ShopifyMultiVendorImporter(DefaultImporter):
     def __init__(self):
         super().__init__()
         self.name = 'shopify_mvm'
-        self.url = os.getenv('MVM_ENDPOINT')
+        self.url = os.getenv('MVM_ENDPOINT', "https://mvmapi.webkul.com")
         self.api_key = os.getenv('MVM_ACCESS_TOKEN')
 
     def fetch_products(self, total_products, limit_per_page=250):

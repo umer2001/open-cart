@@ -95,8 +95,8 @@ class MvmInventoryLocation:
     @staticmethod
     def from_dict(obj: Any) -> 'MvmInventoryLocation':
         assert isinstance(obj, dict)
-        location_id = int(from_str(obj.get("location_id")))
-        variant_quantity = int(from_str(obj.get("variant_quantity")))
+        location_id = int(from_int(obj.get("location_id")))
+        variant_quantity = int(from_int(obj.get("variant_quantity")))
         return MvmInventoryLocation(location_id, variant_quantity)
 
     def to_dict(self) -> dict:
@@ -108,7 +108,7 @@ class MvmInventoryLocation:
 
 class MvmVariant:
     sku: str
-    barcode: int
+    barcode: str
     weight: int
     dimension: str
     price: str
@@ -121,7 +121,7 @@ class MvmVariant:
     inventory_policy: int
     inventory_locations: List[MvmInventoryLocation]
 
-    def __init__(self, sku: str, barcode: int, weight: int, dimension: str, price: str, compare_at_price: str, handling_charges: str, charge_taxes: int, require_shipping: int, track_inventory: int, quantity: int, inventory_policy: int, inventory_locations: List[MvmInventoryLocation]) -> None:
+    def __init__(self, sku: str, barcode: str, weight: int, dimension: str, price: str, compare_at_price: str, handling_charges: str, charge_taxes: int, require_shipping: int, track_inventory: int, quantity: int, inventory_policy: int, inventory_locations: List[MvmInventoryLocation]) -> None:
         self.sku = sku
         self.barcode = barcode
         self.weight = weight
@@ -144,7 +144,7 @@ class MvmVariant:
         else:
             sku = None
         if obj.get("barcode") is not None:
-            barcode = int(from_str(obj.get("barcode")))
+            barcode = from_str(obj.get("barcode"))
         else:
             barcode = None
         if obj.get("weight") is not None:
@@ -176,15 +176,15 @@ class MvmVariant:
         else:
             require_shipping = None
         if obj.get("track_inventory") is not None:
-            track_inventory = int(from_str(obj.get("track_inventory")))
+            track_inventory = int(from_int(obj.get("track_inventory")))
         else:
             track_inventory = None
         if obj.get("quantity") is not None:
-            quantity = int(from_str(obj.get("quantity")))
+            quantity = int(from_int(obj.get("quantity")))
         else:
             quantity = None
         if obj.get("inventory_policy") is not None:
-            inventory_policy = int(from_str(obj.get("inventory_policy")))
+            inventory_policy = int(from_int(obj.get("inventory_policy")))
         else:
             inventory_policy = None
         if obj.get("inventory_locations") is not None:
@@ -226,9 +226,33 @@ class MvmVariant:
         return result
 
 
+class MvmType:
+    id: int
+    type_name: str
+
+    def __init__(self, id: int, type_name: str) -> None:
+        self.id = id
+        self.type_name = type_name
+
+    @staticmethod
+    def from_dict(obj: Any) -> 'MvmType':
+        assert isinstance(obj, dict)
+        id = int(from_int(obj.get("id")))
+        type_name = from_str(obj.get("type_name"))
+        return MvmType(id, type_name)
+
+    def to_dict(self) -> dict:
+        result: dict = {}
+        result["id"] = from_str(str(self.id))
+        result["type_name"] = from_str(self.type_name)
+        return result
+
+
 class ShopifyMultiVendorProduct:
+    id: int
+    shopify_product_id: int
     seller_id: int
-    type: int
+    type: MvmType
     product_name: str
     product_type: str
     product_tag: str
@@ -237,6 +261,7 @@ class ShopifyMultiVendorProduct:
     product_meta_info: str
     product_policy: str
     product_url: str
+    price: str
     expiry_date: str
     shipping_id: int
     variants: List[MvmVariant]
@@ -244,7 +269,9 @@ class ShopifyMultiVendorProduct:
     images: List[MvmImage]
     collections: List[int]
 
-    def __init__(self, seller_id: int, type: int, product_name: str, product_type: str, product_tag: str, product_description: str, handle: str, product_meta_info: str, product_policy: str, product_url: str, expiry_date: str, shipping_id: int, variants: List[MvmVariant], options: List[MvmOption], images: List[MvmImage], collections: List[int]) -> None:
+    def __init__(self, id: int, shopify_product_id: int, seller_id: int, type: MvmType, product_name: str, product_type: str, product_tag: str, product_description: str, handle: str, product_meta_info: str, product_policy: str, product_url: str, price: str, expiry_date: str, shipping_id: int, variants: List[MvmVariant], options: List[MvmOption], images: List[MvmImage], collections: List[int]) -> None:
+        self.id = id
+        self.shopify_product_id = shopify_product_id
         self.seller_id = seller_id
         self.type = type
         self.product_name = product_name
@@ -255,6 +282,7 @@ class ShopifyMultiVendorProduct:
         self.product_meta_info = product_meta_info
         self.product_policy = product_policy
         self.product_url = product_url
+        self.price = price
         self.expiry_date = expiry_date
         self.shipping_id = shipping_id
         self.variants = variants
@@ -265,12 +293,20 @@ class ShopifyMultiVendorProduct:
     @staticmethod
     def from_dict(obj: Any) -> 'ShopifyMultiVendorProduct':
         assert isinstance(obj, dict)
+        if obj.get("id") is not None:
+            id = int(from_int(obj.get("id")))
+        else:
+            id = None
+        if obj.get("shopify_product_id") is not None:
+            shopify_product_id = int(from_int(obj.get("shopify_product_id")))
+        else:
+            shopify_product_id = None
         if obj.get("seller_id") is not None:
-            seller_id = int(from_str(obj.get("seller_id")))
+            seller_id = int(from_int(obj.get("seller_id")))
         else:
             seller_id = None
         if obj.get("type") is not None:
-            type = int(from_str(obj.get("type")))
+            type = MvmType.from_dict(obj.get("type"))
         else:
             type = None
         if obj.get("product_name") is not None:
@@ -289,6 +325,10 @@ class ShopifyMultiVendorProduct:
             product_description = from_str(obj.get("product_description"))
         else:
             product_description = None
+        if obj.get("price") is not None:
+            price = from_str(obj.get("price"))
+        else:
+            price = None
         if obj.get("handle") is not None:
             handle = from_str(obj.get("handle"))
         else:
@@ -317,27 +357,37 @@ class ShopifyMultiVendorProduct:
             variants = from_list(MvmVariant.from_dict, obj.get("variants"))
         else:
             variants = []
-        if obj.get("options") is not None:
-            options = from_list(MvmOption.from_dict, obj.get("options"))
-        else:
-            options = []
-        if obj.get("images") is not None:
-            images = from_list(MvmImage.from_dict, obj.get("images"))
-        else:
-            images = []
-        if obj.get("collections") is not None:
-            collections = from_list(lambda x: int(
-                from_str(x)), obj.get("collections"))
-        else:
-            collections = []
-        return ShopifyMultiVendorProduct(seller_id, type, product_name, product_type, product_tag, product_description, handle, product_meta_info, product_policy, product_url, expiry_date, shipping_id, variants, options, images, collections)
+        # TODO: remove below
+        options = []
+        images = []
+        collections = []
+        # TODO: uncomment below
+        # if obj.get("options") is not None:
+        #     options = from_list(MvmOption.from_dict, obj.get("options"))
+        # else:
+        #     options = []
+        # if obj.get("images") is not None:
+        #     images = from_list(MvmImage.from_dict, obj.get("images"))
+        # else:
+        #     images = []
+        # if obj.get("collections") is not None:
+        #     collections = from_list(lambda x: int(
+        #         from_str(x)), obj.get("collections"))
+        # else:
+        #     collections = []
+        return ShopifyMultiVendorProduct(id, shopify_product_id, seller_id, type, product_name, product_type, product_tag, product_description, handle, product_meta_info, product_policy, product_url, price, expiry_date, shipping_id, variants, options, images, collections)
 
     def to_dict(self) -> dict:
         result: dict = {}
+        if self.id is not None:
+            result["id"] = from_str(str(self.id))
+        if self.shopify_product_id is not None:
+            result["shopify_product_id"] = from_str(
+                str(self.shopify_product_id))
         if self.seller_id is not None:
             result["seller_id"] = from_str(str(self.seller_id))
         if self.type is not None:
-            result["type"] = from_str(str(self.type))
+            result["type"] = MvmType.to_dict(self.type)
         if self.product_name is not None:
             result["product_name"] = from_str(self.product_name)
         if self.product_type is not None:
@@ -346,6 +396,8 @@ class ShopifyMultiVendorProduct:
             result["product_tag"] = from_str(self.product_tag)
         if self.product_description is not None:
             result["product_description"] = from_str(self.product_description)
+        if self.price is not None:
+            result["price"] = from_str(self.price)
         if self.handle is not None:
             result["handle"] = from_str(self.handle)
         if self.product_meta_info is not None:
@@ -370,6 +422,36 @@ class ShopifyMultiVendorProduct:
         if self.collections is not None:
             result["collections"] = from_list(lambda x: from_str(
                 (lambda x: str(x))(x)), self.collections)
+        return result
+
+
+class MvmProductCommission:
+    sp_id_product: int
+    shopify_product_id: int
+    commission_type: str
+    value: str
+
+    def __init__(self, sp_id_product: int, shopify_product_id: int, commission_type: str, value: str) -> None:
+        self.sp_id_product = sp_id_product
+        self.shopify_product_id = shopify_product_id
+        self.commission_type = commission_type
+        self.value = value
+
+    @staticmethod
+    def from_dict(obj: Any) -> 'MvmProductCommission':
+        assert isinstance(obj, dict)
+        sp_id_product = int(from_str(obj.get("sp_id_product")))
+        shopify_product_id = int(from_str(obj.get("shopify_product_id")))
+        commission_type = from_str(obj.get("commission_type"))
+        value = float(from_str(obj.get("value")))
+        return MvmProductCommission(sp_id_product, shopify_product_id, commission_type, value)
+
+    def to_dict(self) -> dict:
+        result: dict = {}
+        result["sp_id_product"] = from_str(str(self.sp_id_product))
+        result["shopify_product_id"] = from_str(str(self.shopify_product_id))
+        result["commission_type"] = from_str(self.commission_type)
+        result["value"] = from_str(str(self.value))
         return result
 
 
